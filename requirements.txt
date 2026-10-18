@@ -1,0 +1,2 @@
+# Upstream implementation. No vendored server code.
+everos-mcp==0.1.1

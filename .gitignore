@@ -1,0 +1,10 @@
+.venv/
+.local/
+.env
+.env.*
+!.env.example
+__pycache__/
+*.py[cod]
+*settings.json
+*-report.json
+.DS_Store
