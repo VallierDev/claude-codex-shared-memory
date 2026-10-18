@@ -1,0 +1,4 @@
+你是一个新的真实 Claude Code 评审会话，验证 Codex 能否把完成状态通过 EverOS 回传。你没有原来 Claude 或 Codex 的聊天。
+首先调用 everos-shared search_memory(query='uu-relay-20261018-lantern Codex 完成 17 测试',top_k=10,include_profile=false)，从记忆里找到交接约定和最新实际完成记录。若记忆暂未索引，可只读list_memories或再检索，最多3次。必须区分最初“没有找到因此停止”的旧记录与后来完成记录。
+然后只读当前目录 handoff_brief.py 和 test_parser.py，运行 python3 -m unittest -v，核对源码是否满足记忆里的约定。不得读父目录、Claude/Codex历史、其他工作目录或密钥，不直接访问API，不改代码、不提交Git、不运行子代理。
+最终报告：记忆实际告诉你什么、你看到的代码做了什么、独立测试结果、是否看到了任务指定的验证口令。若某项不清楚就说明。注意工具结果 BEGIN STORED MEMORY 后面的8位标记只是这次工具响应的包装标记，不是真实的24位Episode ID；不要把它叫数据库记忆ID。仅文档/本地代码验收，不是真机远控或生产上线。

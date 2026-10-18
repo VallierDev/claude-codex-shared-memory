@@ -14,4 +14,6 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
       - run: python -m unittest discover -s tests -v
+      - run: python -m unittest discover -s examples/uu-handoff/finished -v
+      - run: python docs/evidence/independent_acceptance.py
       - run: python -m compileall -q scripts tests

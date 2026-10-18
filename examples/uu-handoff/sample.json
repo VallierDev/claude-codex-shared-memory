@@ -1,0 +1,25 @@
+[
+  {
+    "platform": "NAS-example-only",
+    "component": "terminal",
+    "check": "container-scope-demo",
+    "result": "passed",
+    "evidence": [
+      "synthetic-unit-test.log"
+    ]
+  },
+  {
+    "platform": "Linux-example-only",
+    "component": "viewer",
+    "check": "desktop-demo",
+    "result": "passed",
+    "evidence": []
+  },
+  {
+    "platform": "Linux-example-only",
+    "component": "desktop",
+    "check": "reconnect-demo",
+    "result": "pending",
+    "evidence": []
+  }
+]

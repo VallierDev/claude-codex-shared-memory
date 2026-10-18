@@ -1,0 +1,16 @@
+继续一次真实跨客户端开发接力验收。当前目录已有你先前完成的 handoff_brief.py 和 test_parser.py。只检查这两个文件并运行 python3 -m unittest -v test_parser，不修改它们。
+
+先前 add_memory 只提供 assistant_message，虽然工具返回 Stored and extracted，但接收方搜索、list_memories 以及后端 get 都为空。因此这不是盲目重试，需要修正保存方式。本次必须同时给出 user_message 和 assistant_message，wait=true。
+user_message 必须原样使用真实用户本次的任务：“那你用真实的 Claude 和 Codex 跑一遍完整的开发接力，确认 EverOS 确实能把上下文接过去，再按实际结果更新教程和 Tutti 文案。”
+assistant_message 写你已检查的实际文件、测试结果和下面的技术约定，明确它们是本次隔离验收的实现约定，并非生产 uu-remote-linux 用户额外批准过的需求：
+（不能写进任何代码、注释、测试或本地交接文件）：
+- 检索任务名：uu-relay-20261018-lantern。接收方为一个没有你这轮聊天的新 Codex 会话。
+- 验证口令：纸灯接力，证据先行。接收方须在最终答复原样返回这个口令，证明找到了记忆；口令不放进程序输出。
+- Codex 续做 build_brief(records) -> str，输出首行为 # uu-remote-linux 验收交接。
+- 每条输入输出一行：- [标签] platform / component / check: result。result 等于 passed 且 evidence 至少含一条非空白字符串，标签为 有证据；passed 但没有非空白证据，标签为 待补证；其他 result，标签为 未通过。保持输入顺序，不把 NAS 验证泛化为桌面 Linux。
+- 摘要最后一行必须是：上线状态：未确认；测试结果不代表已部署。
+- CLI 为 python handoff_brief.py INPUT.json，把上述 Markdown 写 stdout；输入错误退出码 2，stderr 简短说明且 stdout 为空；合法输入即便存在未通过项也退出 0。
+- Codex 为渲染与 CLI 新增测试，再独立运行所有测试；不能声称本次运行了 uu-remote-linux 真机远控。
+
+
+保存后必须调用 search_memory 检索任务名，若未索引可以调用 list_memories，确认记忆正文实际可见。至多三次只读验证；不要因索引暂未出现重复写入。只读当前目录，不读其他目录、密钥或聊天日志，不使用子代理，不改变配置，不提交Git。最终报告保存和检索的真实状态。

@@ -2,6 +2,14 @@
 
 日期：2026-10-18，Asia/Taipei。
 
+## 新增：真实模型客户端开发接力
+
+已在真实 Claude Code 和 Codex CLI 间完成一个本地交接摘要小工具的开发、测试、回存与新 Claude 会话复核。Claude 阶段 A 为 10 项解析测试，Codex 补完后 17 项，新 Claude 独立复跑 17 项，另有 5 项事先未交给 Codex 的检查通过。
+
+接收方只获得两个源文件和检索任务名，关键约定与验证口令通过实际 MCP 搜索取得。也保留了首轮检索为空、长消息提取缺失和拆短后成功的记录。查看 [完整实测过程](real-client-relay.md) 和 [工具摘录](evidence/real-client-relay.json)。
+
+下面的原始进程级测试仍单独保留；两者是不同层次的验证。
+
 ## 本项目启动器的在线验证
 
 环境：macOS，Python 3.14，`everos-mcp==0.1.1`，EverOS Cloud。使用专门的演示 user/project 范围，内容为合成接力规则，不上传私人聊天。
@@ -15,7 +23,7 @@
 
 结果：`written=true`，`retrieved=true`；清理收到 `Deleted 1 stored item(s)`。后续仅加强了验收脚本对这条清理回复的检查，没有重新写入测试数据。
 
-这是**独立 MCP 进程之间的后端接力验收**。没有据此宣称已自动操作 Claude 和 Codex 两个模型客户端完成双向接力。README 提供了真实客户端的手动验收步骤。配置方式对照本机 CLI help 与两家官方 MCP 文档。
+这部分是**独立 MCP 进程之间的后端接力验收**，不能代替上面新增的真实模型客户端验收。配置方式对照本机 CLI help 与两家官方 MCP 文档。
 
 ## 离线检查
 

@@ -25,7 +25,9 @@
 
 这次我们也用 uu-remote-linux 的公开文档做了真实体验：交叉核对中英文 README、构建入口和 NAS 指南，把“实验性 viewer”和“无桌面 NAS 不提供远程桌面”等容易丢掉的限定保存成记忆；新进程检索能找回，记忆中的错误归因也通过 API 做了纠正。
 
-目前公开的自动验收覆盖独立 MCP 进程接力；没有把它包装成两个模型客户端的端到端录屏，也没有证明自动 Skill 提炼。读者可以按下面的双客户端步骤，在自己的 Claude Code 与 Codex 上复现。完整边界见 [验证记录](docs/validation.md)。
+现在也跑过真实客户端接力：Claude 写解析器和 10 项测试；新 Codex 会话从 EverOS 取得未随代码传递的约定，补完 Markdown、CLI 和测试，17 项通过；Codex 回存完成状态后，新 Claude 会话检索并独立复核，17 项也通过。另有 5 项独立检查通过。
+
+它并非一次就成功：只写 Agent 消息时曾检索为空，长交接还丢失过精确格式。修正保存方式、拆短约定并读回核对后才完成。完整步骤、失败记录、源码与工具摘录见 **[真实 Claude → Codex → Claude 开发接力](docs/real-client-relay.md)**。本次交付的是本地交接摘要小工具，未修改远控核心、未做真机验收，也未证明自动 Skill 提炼。
 
 ```mermaid
 flowchart LR
@@ -126,6 +128,12 @@ CLI 与同一宿主上的 Codex App 可使用这套 MCP 配置。重新启动客
 
 然后反方向，在 Codex 保存一条新决定，去 Claude 新会话检索。记录两边工具返回和记忆 ID，才算完成你自己机器上的双客户端验收。第一次索引可能滞后，先用 `list_memories` 看提取结果，稍后只重试读取，不重复保存同一条。
 
+### 保存回执还不够，要验收内容
+
+真实客户端接力中，我们遇到过 `add_memory(wait=true)` 返回 `Stored and extracted`，但接收方 `search_memory` 和 `list_memories` 都为空。那次写入只有 `assistant_message`；改为同时保存**真实用户原始任务**（`user_message`）和 **Agent 实际结果 / 决定**（`assistant_message`）后，接收方才读到交接。本次观察不能代替所有部署的归因规则，也不要把 AI 的决定伪写成用户原话。
+
+另外，长交接会被自动提取、概括，可能保留“存在格式要求”，却丢掉具体格式和退出码。请让接收方读回并复述关键约束，而不只是问“有没有搜到”。精确接口、schema、测试用例仍应放在 Git 中；EverOS 用于找回项目背景、决定和来源。不要把它当无损聊天同步或唯一的规格存储。
+
 ## 为什么同一 Key 还不够？
 
 检索同时受这些范围影响：
@@ -181,7 +189,7 @@ CLI 与同一宿主上的 Codex App 可使用这套 MCP 配置。重新启动客
   --report .local/smoke-report.json
 ```
 
-Windows 将 `.venv/bin/python` 换为 `.\.venv\Scripts\python.exe`，命令写成一行。这个脚本验证的是**两个独立 MCP 进程共享后端**，不是 Claude 和 Codex 两个模型客户端的自动化验收。第 4 步仍需在真实客户端完成。具体实测见 [验证记录](docs/validation.md)。
+Windows 将 `.venv/bin/python` 换为 `.\.venv\Scripts\python.exe`，命令写成一行。这个脚本本身仍只验证**两个独立 MCP 进程共享后端**；不要把它的通过当作你机器上的双模型客户端验收。我们另行完成的真实客户端接力、运行提示词与证据见 [完整记录](docs/real-client-relay.md)，你自己的客户端可按第 4 步验收。
 
 ## 数据、修正和删除
 
